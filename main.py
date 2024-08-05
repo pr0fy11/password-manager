@@ -41,6 +41,10 @@ class PasswordManager:
     def get_pass(self, site):
         return self.password_dict[site]
     
+    def generate_password(self, digits,):
+        self.psswd
+        pass # create a generate password method
+    
 def main():
     password = {"email" : "123",
                 "youtube" : "465as",

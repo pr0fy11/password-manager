@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
 from tkinter import simpledialog
 from cryptography.fernet import Fernet
@@ -23,6 +24,7 @@ class PasswordManagerGUI:
         self.title_label.pack(padx=15, pady=(20, 15), anchor='w')
 
         # Create buttons and add them to the menu frame
+        self.add_separator()
         self.create_key_button = self.create_button("🔑 Create New Key", self.create_key)
         self.load_key_button = self.create_button("📂 Load Existing Key", self.load_key)
         self.create_pass_file_button = self.create_button("📁 Create New Password File", self.create_pass_file)
@@ -42,6 +44,11 @@ class PasswordManagerGUI:
         button.bind("<Leave>", lambda e: self.on_leave(button))
 
         return button
+    
+    def add_separator(self):
+        separator = tk.Frame(self.menu_frame, bg='#5c5e66', height=2)
+        separator.pack(fill='x', padx=13, pady=5)
+
 
     def on_enter(self, button):
         button.config(bg='#2f3136')  # Change background color on hover
@@ -93,10 +100,27 @@ class PasswordManagerGUI:
                 messagebox.showinfo("Password", f"Password for {site}: {password}")
             except KeyError:
                 messagebox.showerror("Error", f"No password found for {site}")
-
+#generator method not done yet
     def generate_password(self):
-        # Placeholder method for generating a password
-        print("Generate Password button clicked")
+        digits = simpledialog.askstring("Input", "Enter how many digits would you like:")
+        if digits >= str("8") :
+            try:
+                psswd=self.pm.generate_password(digits)
+                messagebox.showinfo("Success!", f"Password has been generated: {psswd}")
+                self.copy_button.config(state='normal')
+            except KeyError:
+                messagebox.showerror("Error", "Invalid Input")
+
+
+        
+        
+
+
+    def copy_to_clipboard(self):
+        self.root.clipboard_clear()
+        self.root.clipboard_append(self.password)
+        messagebox.showinfo("Success", "Password copied to clipboard")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
