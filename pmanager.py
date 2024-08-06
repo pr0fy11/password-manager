@@ -20,9 +20,11 @@ class PasswordManagerGUI:
         self.menu_frame = tk.Frame(self.root, bg='#23272a', width=300)
         self.menu_frame.pack(side='left', fill='y')
 
-        self.title_label = tk.Label(self.menu_frame, text="🏠 Menu", fg='#dcddde', bg='#23272a', font=('Helvetica', 16, 'bold'), anchor='w')
+        self.title_label = tk.Label(self.menu_frame, text="⚙ Menu", fg='#dcddde', bg='#23272a', font=('Helvetica', 16, 'bold'), anchor='w')
+        self.gen_pass = tk.Label(self.menu_frame, text="⚙ Generated Password", fg='#dcddde', bg='#23272a', font=('Helvetica', 16, 'bold'), anchor='w')
         self.title_label.pack(padx=15, pady=(20, 15), anchor='w')
-
+        self.password_entry = tk.Entry(self.menu_frame, font=('Helvetica', 14), bg='#2f3138', fg='#dcddde', bd=0, width=15)
+        self.password_entry.insert(0, "Generated password")
         # Create buttons and add them to the menu frame
         self.add_separator()
         self.create_key_button = self.create_button("🔑 Create New Key", self.create_key)
@@ -32,6 +34,10 @@ class PasswordManagerGUI:
         self.add_pass_button = self.create_button("➕ Add New Password", self.add_pass)
         self.get_pass_button = self.create_button("🔍 Get Password", self.get_pass)
         self.generate_password_button = self.create_button("☆NEW☆ Generate Password", self.generate_password)
+        self.add_separator()
+        self.title_label = tk.Label(self.menu_frame, text="⚙ Generated Password", fg='#dcddde', bg='#23272a', font=('Helvetica', 16, 'bold'), anchor='w')
+        self.gen_pass.pack(padx=15, pady=(20, 15), anchor='w')
+        self.password_entry.pack(padx=15, pady=5, fill='x')
 
     #Method that creates the buttons
     def create_button(self, text, command):
@@ -103,13 +109,25 @@ class PasswordManagerGUI:
 #generator method not done yet
     def generate_password(self):
         digits = simpledialog.askstring("Input", "Enter how many digits would you like:")
-        if digits >= str("8") :
+
+        if digits:
             try:
-                psswd=self.pm.generate_password(digits)
-                messagebox.showinfo("Success!", f"Password has been generated: {psswd}")
-                self.copy_button.config(state='normal')
-            except KeyError:
-                messagebox.showerror("Error", "Invalid Input")
+                digits = int(digits)  # Convert input to integer
+                if digits >= 8:  # Ensure minimum length is 8
+                    psswd = self.pm.generate_random_password(digits)
+                    messagebox.showinfo("Success!", f"Password has been generated: {psswd}")
+                    self.password_entry.delete(0, tk.END)  
+                    self.password_entry.insert(0, psswd)
+                    self.password = psswd
+                    
+                else:
+                    messagebox.showerror("Error", "Password length must be at least 8 digits.")
+            except ValueError:
+                messagebox.showerror("Error", "Invalid input. Please enter a valid number.")
+        else:
+            messagebox.showerror("Error", "Input cannot be empty.")
+
+
 
 
         

@@ -1,4 +1,7 @@
 from cryptography.fernet import Fernet
+import secrets
+import string
+
 
 class PasswordManager:
     def __init__(self):
@@ -41,9 +44,16 @@ class PasswordManager:
     def get_pass(self, site):
         return self.password_dict[site]
     
-    def generate_password(self, digits,):
-        self.psswd
-        pass # create a generate password method
+
+    #using string for all the symbols in a password
+    def generate_random_password(self,length):
+        if not isinstance(length, int) or length <= 0:
+            raise ValueError("Password length must be a positive integer")
+    
+        alphabet = string.ascii_letters + string.digits + string.punctuation
+        password = ''.join(secrets.choice(alphabet) for _ in range(length))
+        return password
+
     
 def main():
     password = {"email" : "123",
